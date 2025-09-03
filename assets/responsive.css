@@ -1,0 +1,58 @@
+@charset "UTF-8";
+/* CSS Document */
+
+.slicknav_menu {
+	display:none;
+}
+
+    /*==========  Non-Mobile First Method  ==========*/
+
+    /* Large Devices, Wide Screens */
+    @media only screen and (max-width : 1200px) {
+		.slicknav_menu {
+	display:none;
+}
+
+    }
+
+    /* Medium Devices, Desktops */
+    @media only screen and (max-width : 992px) {
+		.slicknav_menu {
+	display:block;
+}
+
+    }
+
+    /* Small Devices, Tablets */
+    @media only screen and (max-width : 768px) {
+		.slicknav_menu {
+	display:block;}
+
+.bigcaption h1 {font-size:20px; font-weight:bold;}
+
+.bigcaption h2 {font-size:12px; }
+
+ .headline {display:block; position:absolute;    z-index:100; 
+color: #fff;  font-size:20px;  top:40%;  width:400px;
+margin-left:-200px;
+    text-align: center;
+		 left:50%; 
+   
+                             
+}
+
+
+ .headline p {font-size:12px}
+
+
+    }
+
+    /* Extra Small Devices, Phones */ 
+    @media only screen and (max-width : 480px) {
+
+    }
+
+    /* Custom, iPhone Retina */ 
+    @media only screen and (max-width : 320px) {
+        
+    }
