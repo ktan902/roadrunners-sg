@@ -69,18 +69,18 @@
 					
                   
     <!-- Begin WebForm (Contact) -->
- <script src="https://bb-cms-ap.s3.amazonaws.com/AppData/Common/js/WebFormValidation.js"></script>
     
     
-  <form enctype="multipart/form-data" name="Contact" onsubmit="return validateWebform_Contact(this)" action="/SubmitForm/0620f5af-5919-4ea1-b0d4-c50f47dd7210" method="post" id="Form_1186">
-						<div class="form-group">
+  <form enctype="multipart/form-data" name="contact" method="post" data-netlify="true" netlify-recaptcha id="contact-form" netlify>
+
+						<div class="form-group"><input type="hidden" name="form-name" value="contact" />
 						
-                            <input class="form-control" id="First_Name" name="First_Name" type="text" placeholder="Name">
+                            <input class="form-control required" id="First_Name" name="First_Name" type="text" placeholder="Name" required>
                             
                             
-						<div data-lastpass-icon-root="" style="position: relative !important; height: 0px !important; width: 0px !important; float: left !important;"></div></div>
+					</div>
 						<div class="form-group">
-							<input class="form-control" type="text" id="Last_Name" name="Last_Name" placeholder="Surname">
+							<input class="form-control required" type="text" id="Last_Name" name="Last_Name" placeholder="Surname" required>
                          
                             
 						</div>
@@ -88,24 +88,24 @@
 							<input class="form-control" type="text" id="Company" name="Company" placeholder="Company">
 						</div>
 						<div class="form-group">
-							<input class="form-control" type="text" id="Email_Address" name="Email_Address" placeholder="Email address">
+							<input class="form-control required" type="text" id="Email_Address" name="Email_Address" placeholder="Email address" required>
 						</div>
 						<div class="form-group">
-							<input class="form-control" type="text" id="Cell_Phone" name="Cell_Phone" placeholder="Contact number">
+							<input class="form-control required" type="text" id="Cell_Phone" name="Cell_Phone" placeholder="Contact number" required>
 						</div>
 						<div class="form-group">
 							
                             
-                            <textarea class="form-control" maxlength="999" id="Message" name="Message" rows="10" cols="30" placeholder="Please enter your enquiry here"> 
+                            <textarea class="form-control required" maxlength="999" id="Message" name="Message" rows="10" cols="30" placeholder="Please enter your enquiry here" required> 
                             </textarea>
                             
 						</div>
                             
-                  	<div class="form-group">
-							  <input type="hidden" id="sws__honey_pot" name="sws__honey_pot" value="">
- <input type="hidden" id="recaptcha-token" name="RecaptchaToken">
-  
-						</div>          
+                      <div class="form-group">
+                                  <!-- Netlify reCAPTCHA widget -->
+    <div data-netlify-recaptcha="true"></div>
+
+                                </div>         
                          
                             
                             
@@ -115,38 +115,45 @@
                             
                             
                               <input class="btn btn-primary center-block" type="submit" value="Submit"> 
+							
+							    <div id="form-status" style="margin-top:1em;"></div>
+
 						</div>
-					
-<script>
-var submissionAttempts_Contact = 0;
-function validateWebform_Contact(sws__Form){
-var errorList = '';
-if (sws__Form.Cell_Phone) errorList += sws__validateRequiredField(sws__Form.Cell_Phone.value, 'Cell Phone is required.'); 
-if (sws__Form.First_Name) errorList += sws__validateRequiredField(sws__Form.First_Name.value, 'First Name is required.'); 
-if (sws__Form.Last_Name) errorList += sws__validateRequiredField(sws__Form.Last_Name.value, 'Last Name is required.'); 
-if (sws__Form.Email_Address) errorList += sws__validateEmail(sws__Form.Email_Address.value, 'Email Address is required and must be in a valid email format.'); 
-//Validate Recaptcha was checked
-if (sws__Form['g-recaptcha-response']) errorList += sws__validateCaptchaV2(sws__Form, 'Form submission is a privilege reserved for humans only.  Please prove you are not a robot.');
-if(errorList != ''){
-var errorMessage = 'The following fields need to be complete before submitting this form: ';
-errorMessage += errorList;
-alert(errorMessage);
-return false;
-}
-if(submissionAttempts_Contact == 0){
-submissionAttempts_Contact++;
-theForm.submit();
-return false;
-}
-else{
-alert('The form is already being submitted. You will be redirected when its complete.');
-return false;
-}
-}
-</script>
+		
 					</form>  
     
     
+ <!-- AJAX Form Submission Script -->
+  <script>
+  document.getElementById("contact-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const status = document.getElementById("form-status");
+    const data = new FormData(form);
+
+    try {
+      const response = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(data).toString()
+      });
+
+      const text = await response.text();
+
+      if (text.includes("Captcha verification failed")) {
+        status.innerHTML = "<p style='color:red;'>Please complete the CAPTCHA before submitting.</p>";
+      } else if (response.ok) {
+        status.innerHTML = "<p style='color:green;'>Thanks for your message! We'll get back to you soon.</p>";
+        form.reset();
+      } else {
+        status.innerHTML = "<p style='color:red;'>Submission failed. Please try again later.</p>";
+      }
+    } catch (error) {
+      status.innerHTML = "<p style='color:red;'>Network error. Please try again later.</p>";
+    }
+  });
+</script>	
     
 <!-- End WebForm (Contact) -->
 
